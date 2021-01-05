@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-ini_set("display_errors","on");
 define('BASE_DIR',$_SERVER["DOCUMENT_ROOT"].'/..');
 include BASE_DIR.'/includes.php';
 ?>
