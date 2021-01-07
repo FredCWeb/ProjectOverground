@@ -45,19 +45,20 @@ class PHPMailerExtend extends System
     public function sendMail($to,$from,$subject,$templateName,$arrVar = false){
         $hasHTML = false;
         if(is_array($from) && isset($from['email'])){
-            $post = array(0 => array('email' => true, 'value' => $to, 'key' => 'to'),
-                          1 => array('email' => true, 'value' => $from['email'], 'key' => 'from'));            
+            $emailCheck = array(0 => array('email' => true, 'value' => $to, 'key' => 'to'),
+                1 => array('email' => true, 'value' => $from['email'], 'key' => 'from'));
         }else {
-            $post = array(0 => array('email' => true, 'value' => $to, 'key' => 'to'),
-                          1 => array('email' => true, 'value' => $from, 'key' => 'from'));
+            $emailCheck = array(0 => array('email' => true, 'value' => $to, 'key' => 'to'),
+                1 => array('email' => true, 'value' => $from, 'key' => 'from'));
         }
-        $valid = new Valid($post);
+        $valid = new Valid();
+        $valid->validateForm($emailCheck);
         if(!$valid->success){ return false; }
         if(!$this->frommAddress($from)){ return false; }
         if(!$this->toAddress($to)){ return false; }
         $this->mail->Subject = $subject;
         $htmlFile = BASE_DIR.'/TEMPLATES/Email/html/'.$templateName.'.html';
-        if(file_exists($htmlFile)){ 
+        if(file_exists($htmlFile)){
             $htmlValue = file_get_contents($htmlFile);
             if(is_array($arrVar)) {
                 foreach ($arrVar as $key => $value){
@@ -83,7 +84,7 @@ class PHPMailerExtend extends System
         }else{
             return false;
         }
-        
+
         return $this->mail->send();
     }
 
@@ -92,7 +93,7 @@ class PHPMailerExtend extends System
             if(isset($from['email']) && $from['email'] != ''){
                 $fromEmail = $from['email'];
                 if(isset($from['name']) && $from['name'] != ''){
-                    $fromName = $from['name'];    
+                    $fromName = $from['name'];
                 }else{
                     $fromName = '';
                 }
